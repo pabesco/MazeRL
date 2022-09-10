@@ -14,12 +14,17 @@ STEPS = 100
 UNIT_SIZE = HEIGHT/10
 CENTRE = UNIT_SIZE/2
 RED = (0, 0, 255)
+GREEN = (0, 255, 0)
 
 HM_EPISODES = 2000
 
 MOVE_PENALTY = 1
-BORDER_PENALTY = 300
-WIN_REWARD = 300
+#previously both BORDER_PENALTY and WIN_REWARD were 300
+#This the agent to jump over a border near the end point due to less number of steps required
+#Hence, increased BORDER_PENALTY and reduced WIN_REWARD
+
+BORDER_PENALTY = 1000
+WIN_REWARD = 25
 
 epsilon = 0.5
 EPS_DECAY = 0.994
@@ -34,7 +39,7 @@ DISCOUNT = 0.95
 class Blob:
     def __init__(self):
         #print("init block")
-        self.x = floor(5*CENTRE)
+        self.x = floor(9*CENTRE)
         self.y = floor(1*CENTRE)
         self.done = False
         self.step = 0
@@ -98,12 +103,13 @@ class Blob:
         elif self.step > STEPS:
             self.done = True
             self.reward = -MOVE_PENALTY
+        elif 5*UNIT_SIZE < player.xnew < 6*UNIT_SIZE and 10*UNIT_SIZE >  player.ynew > 9*UNIT_SIZE:
+            self.reward = WIN_REWARD
+            self.done = True
+            print("Hoooorayyyy!!!!")
+            COLOR = GREEN
         else:
             self.reward = -MOVE_PENALTY
-
-        if player.x < 5*UNIT_SIZE and player.y > 9*UNIT_SIZE:
-            self.reward = WIN_REWARD
-            print("Hoooorayyyy!!!!")
 
 def whichbox(x):
     return int(x/UNIT_SIZE)
@@ -116,12 +122,13 @@ if start_q_table is None:
 else:
     with open(start_q_table, "rb") as f:
         q_table = pickle.load(f)
-
+print(len(q_table))
 episode_rewards = []
 
 for episode in range(HM_EPISODES):
     player = Blob()
     img = copy.deepcopy(img_orig)
+    COLOR = RED
 
     #print("New Episode")
     episode_reward = 0
@@ -165,7 +172,7 @@ for episode in range(HM_EPISODES):
         q_table[obs][action] = new_q
 
         if episode % SHOW_EVERY == 0:
-            cv2.circle(img,(player.x, player.y), 15, RED, -1)
+            cv2.circle(img,(player.x, player.y), 15, COLOR, -1)
             cv2.imshow('image',img)
             cv2.waitKey(100)
 
