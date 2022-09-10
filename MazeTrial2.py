@@ -7,17 +7,19 @@ img1 = cv2.imread('imageStartEnd.jpg', cv2.IMREAD_COLOR)
 WIDTH, HEIGHT = img1.shape[0], img1.shape[1]
 print(WIDTH, HEIGHT)
 
-x = 17
-y = 20
+UNIT_SIZE = 27.5
+
+x = 1
+y = 1
 RED = (0,0,255)
 
 done = False
 while not done:
-    corn1 = (x, y)
-    corn2 = (x+30, y+30)
+    coordinate = (x*UNIT_SIZE, y*UNIT_SIZE)
+    #corn2 = (x+30, y+30)
     img = copy.deepcopy(img1)
-    #cv2.circle(img,(170 ,31), 15, (0,255,0), -1)
-    cv2.rectangle(img,corn1,corn2, RED, -1)
+    cv2.circle(img,coordinate, 15, RED, -1)
+    #cv2.rectangle(img,corn1,corn2, RED, -1)
     cv2.imshow('image',img)
     cv2.waitKey(20)
     #cv2.destroyAllWindows()
