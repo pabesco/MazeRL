@@ -1,5 +1,7 @@
 # MazeRL
 
+Built end-to-end from ideation, design and development. 
+
 Finding path in a maze using reinforcement learning
 
 The MazeRL, is an attempt to finding a path inside a maze using Reinforcement Learning Approach - Q-Learning.
